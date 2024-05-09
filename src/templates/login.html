@@ -1,0 +1,135 @@
+{% load static %} 
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Hotel Booking App - Registration</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
+    />
+
+    <style>
+      body {
+        background-color: #e0e4e9;
+
+      }
+
+      .card {
+
+         /* Simulated 3D gradient background */
+         /* Dark teal border for the card */
+         /* White text color in the card */
+        /* Box shadow for a subtle lift */
+        transition: transform 0.3s ease-in-out;
+      }
+
+
+
+
+      .btn-success {
+        background: linear-gradient(
+          145deg,
+          #004d40,
+          #00251a
+        ); /* Simulated 3D gradient background for the button */
+        border-color: #004d40; /* Dark teal border color for the button */
+      }
+
+      .btn-success:hover {
+        background: linear-gradient(
+          145deg,
+          #00251a,
+          #00120d
+        );
+        
+      }
+
+      .required-message {
+        color: #dc3545; /* Bootstrap's danger color for a red required message */
+        font-size: 0.875rem; /* Adjust font size as needed */
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container mt-5">
+      <div class="row justify-content-center">
+        <div class="col-md-4">
+          <h1 class="text-center mb-3 text-Dark ">Hotel Booking App</h1>
+          <div class="card shadow-lg">
+            <div class="card-header text-dark text-center fw-bold fs-3">
+              Login Form
+            </div>
+            <div class="card-body">
+            {{form.non_field_errors}}
+              <form method="POST" >
+                {% csrf_token %}
+                  <div class="row">
+                    <div class="col-3">
+                      <label for="password" class="form-label text-dark">{{form.username.label}}</label>
+                      </div>
+                    <div class="col-5">
+                      {{ form.username }}
+                    </div>
+                      {% if form.username.errors %}
+                        {% for error in form.username.errors %}
+                            <p style="color: red;">{{error}}</p>
+                        {% endfor %}
+                      {% endif %}
+                  </div><br>
+                  <div class="row">
+                    <div class="col-3">
+                      <label for="password" class="form-label text-dark">{{form.password.label}}</label>
+                    </div>
+                    <div class="col-4">{{ form.password }}</div>
+                      
+                      {% if form.password.errors %}
+                        {% for error in form.password.errors %}
+                            <p style="color: red;">{{error}}</p>
+                        {% endfor %}
+                      {% endif %}
+                  </div>
+
+                <div class="col-12 text-center mt-3">
+                  <button type="submit" class="btn btn-primary w-25 p-1 fw-bold fs-2">
+                    Login
+                  </button>
+                </div>
+              </form>
+              <div class="text-center mt-3 text-dark">
+                Don't have an account?
+                <a href="{% url 'customer_register' %}" class="text-primary"> Register here</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<script src="{% static 'js/sweetalert2011.min.js' %}"></script>
+
+<script>
+    {% if messages %}
+        {% for message in messages %}
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "{{ message }}",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        {% endfor %}
+    {% endif %}
+</script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

@@ -1,0 +1,232 @@
+{% extends "master.html" %} {% load static %} {% block mainblock %}
+
+<!-- Hotel section -->
+<section class="furniture_section layout_padding">
+  <div class="container">
+    <div class="heading_container ">
+      <h2>Our Hotels</h2>
+      <p>
+        which don't look even slightly believable. If you are going to use a
+        passage of Lorem Ipsum, you need to be sure there isn't an
+      </p>
+    </div>
+    <div class="row">
+      {% for i in hotels %}
+      <div class="col-md-6 col-lg-4">
+        <div class="box shadow-lg ">
+          <div class="img-box ">
+            <a class="shadow-lg" href="{% url 'hotel_detail' pk=i.hotel.pk %}">
+              <img
+                style="display: inline-block; width: 300px; height: 250px"
+                src="{{ i.hotel.images.first.image.url }}"
+                alt=""
+              />
+            </a>
+          </div>
+          <div class="hotel-box">
+            <div class="row">
+              <div class="col-md-8">
+                <h5>{{ i.hotel.name }}</h5>
+              </div>
+              <div class="col-md-4 text-right">
+                <i class="fa fa-map-marker"> {{ i.hotel.city }}</i>
+              </div>
+            </div>
+
+            <div class="price_box row">
+              <div class="col-md-8">
+                <h6 class="price_heading">
+                  <span>Rs </span>{{ i.average_price|floatformat:0 }}/Day
+                </h6>
+              </div>
+              <div class="col-md-4 text-right">
+                <h5>
+                  {% if i.hotel.ratting %}{{ i.hotel.ratting }}<i class="fa fa-star text-danger"></i>{% else %}N/A{% endif %}
+                </h5>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+<!-- end hotel section -->
+<!-- about section -->
+<section class="long_section about_section layout_padding" style="border-radius:8px; padding">
+  <div class="container">
+    <div class="heading_container"> 
+    <h2><i class="fa fa-star text-danger"></i> About Section</h2></p>
+    </div>
+    {% for i in about %}
+    <div class="row">
+        <div class="col-md-6">
+          <div class="img-box">
+            <img src="{{i.image.url}}" alt="" />
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="detail-box">
+            <div class="heading_container">
+              <h2>{{i.site_name}}</h2>
+            </div>
+            <p>
+              {{i.description}}
+            </p>
+            <a href=""> Read More </a>
+          </div>
+        </div>
+    </div>
+      {% endfor %}
+  </div>
+</section>
+<!-- end about section -->
+
+<!-- Popular hotels section -->
+<!-- High Rating Hotels section -->
+<section class="blog_section layout_padding">
+  <div class="container">
+    <div class="heading_container">
+      <h2><i class="fa fa-star text-danger"></i> High Rating Hotels</h2>
+    </div>
+    <div class="row">
+      {% for i in high_ratings %} 
+      <div class="col-md-6 col-lg-4">
+        <div class="box" style="border-radius:8px">
+          <div style="padding: 20px 20px 20px 20px;" class="img-box mt-2 px-2">
+            <a href="{% url 'hotel_detail' pk=i.pk %}">
+              
+              <img
+                style="display: inline-block; width: 350px; height: 250px;"
+                src="{{ i.images.first.image.url }}"
+                alt=""
+              />
+            </a>
+          </div>
+          <br />
+          <div class="hotel-box">
+            <div class="row px-2">
+              <div class="col-md-8">
+                <h5>{{i.name}}</h5>
+              </div>
+              <div class="col-md-4 text-right">
+                <i class="fa fa-map-marker"> {{i.city}}</i>
+              </div>
+            </div>
+
+            <div class="row px-2 price_box">
+              <div class="col-md-8">
+                <h6 class="price_heading">
+                  <span>Rs </span>{{i.price}}/Day
+                </h6>
+              </div>
+              <div class="col-md-4 text-right">
+                {% if i.ratting != 0 %}<h5>{{ i.ratting }}<i class="fa fa-star text-danger"></i></h5>{% else %}<h5>N/A</h5>{% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+<!-- end High Rating Hotels section -->
+<!-- contact section -->
+<section class="contact_section long_section" style="border-radius:8px; padding">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="heading_container">
+          <h2>Contact Us</h2>
+        </div>
+        <form class="main-form"  id="contactform">
+          {% csrf_token %}
+          <h3>Find Your Hotel</h3>
+          <div class="row">
+              <div class="col-md-12">
+                  <div>
+                      <input class="form-control" placeholder="Enter Name" id ="name_contact" type="text" name="name" required>
+                  </div>
+                  <br>
+                  <div>
+                      <input class="form-control" placeholder="Phone" type="text" id ="phone_contact" name="phone_number" required>
+                  </div>
+                  <br>
+                  <div>
+                      <input class="form-control" placeholder="Email" type="email" id ="email_contact" name="email" required>
+                  </div>
+                  <br>
+                  <div>
+                      <textarea class="form-control" name="message" placeholder="Message" id ="msg_contact" rows="3" required></textarea>
+                  </div>
+              </div>
+              <div>
+                  <br><button type="submit" class="btn btn-sm btn-primary">Send</button>
+              </div><br>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- end contact section -->
+
+{% endblock%}
+<!-- Update your JavaScript code -->
+
+{% block scriptblock %}
+<script src="{% static 'js/sweetalert2011.min.js' %}"></script>
+<script>
+  $(document).ready(function () {
+    $('#contactform').submit(function (e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: '{% url "contact" %}',
+            data: $(this).serialize(),
+            success: function (response) {
+                
+                console.log("!!!!!",response.msg);
+                $("#name_contact").val('');
+                $("#phone_contact").val('');
+                $("#email_contact").val('');
+                $("#msg_contact").val('');
+                Swal.fire({
+                   position: "top-end",
+                   icon: "success",
+                   title: response.msg,
+                   showConfirmButton: false,
+                   timer: 1500
+                });
+                // Provide feedback to the user if needed
+            },
+            error: function (response) {
+                console.log("Error!", response);
+                // Provide feedback to the user if needed
+            }
+        });
+    });
+});
+
+</script>
+
+<script>
+    {% if messages %}
+        {% for message in messages %}
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "{{ message }}",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        {% endfor %}
+    {% endif %}
+</script>
+   
+
+{% endblock %}

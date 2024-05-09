@@ -1,0 +1,61 @@
+
+{% load static %} 
+
+
+
+<div class="justify-content-center d-flex">
+    <div class="card w-75">
+        <div class="card-header bg-primary text-white">
+            <h5 class="card-title mb-0">Booking Details</h5>
+        </div>
+        <div class="card-body">
+            <table id="example-datatable" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th class="text-center">ID</th>
+                        <th class="text-center">Hotel</th>
+                        <th class="text-center">Full Name</th>
+                        <th class="text-center">Room Catogery Name</th>
+                        <th class="text-center">Room</th>
+                        <th class="text-center">Person</th>
+                        <th class="text-center">Checkin Date</th>
+                        <th class="text-center">Checkout Date</th>
+                        <th class="text-center">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="text-center">{{ booking.pk }}</td>
+                        <td class="text-center">{{ booking.hotel.name }} </td>
+                        <td class="text-center">{{ booking.first_name }} {{ booking.last_name }}</td>
+                        <td class="text-center">{{ booking.room_category.catogory_name }}</td>
+                        <td class="text-center">{{ booking.room }}</td>
+                        <td class="text-center">{{ booking.person }}</td>
+                        <td class="text-center">{{ booking.checkin_date }}</td>
+                        <td class="text-center">{{ booking.checkout_date }}</td>
+                        <td class="text-center">{{ booking.amount }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% block scriptblock %}
+
+<script src="{% static 'js/sweetalert2011.min.js' %}"></script>
+
+<script>
+    {% if messages %}
+        {% for message in messages %}
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "{{ message }}",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        {% endfor %}
+    {% endif %}
+</script>
+{% endblock %}

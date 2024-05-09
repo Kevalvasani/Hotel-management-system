@@ -1,0 +1,191 @@
+{% extends 'admin/master.html' %}
+{% load static %}
+
+{% block headblock %}
+   
+{% endblock %}
+
+{% block mainblock %}
+
+<!-- Datatables Header -->
+<div class="content-header">
+    <div class="header-section">
+        <div class="row">
+            <div class="col-sm-6 ">
+                <h1>
+                    Hotel List<br><small>You can Add, Update and Delete your Data</small>
+                </h1>
+            </div>
+            <div class="col-sm-5" style="justify-content:end; display:flex;">
+                <a href="{% url 'add_hotel_by_admin' %}" data-toggle="tooltip" title="Add Hotel" class="btn btn-sm btn-default"><i class="fa fa-plus"style="font-size:36px;"></i></a><br/>
+            </div>
+        </div>
+    </div>
+</div>
+<ul class="breadcrumb breadcrumb-top">
+    <li>Hotels</li>
+    <li><b>List</b></li>
+</ul>
+<!-- END Datatables Header -->
+
+    <!-- Datatables Content -->
+<div class="block full">
+    <div class="block-title">
+        <h2><strong>Hotel</strong> List</h2>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label for="datepicker">select date for rooms available:</label>
+            <input type="date" name="datepicker" id="datepicker" class="form-control" value='{{ today_date|date:"Y-m-d" }}'><br>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table id="mytable" class="table border-top-0 table-striped  table-bordered text-nowrap border-bottom" style="width:100%">
+            <thead>
+                <tr>
+                    <th class="text-center">ID</th>
+                    <th class="text-center">Image</th>
+                    <th class="text-center">Hotel Manger</th>
+                    <th class="text-center">Name</th>
+                    <th class="text-center">Owner name</th>
+                    <th class="text-center">Services</th>
+                    <th class="text-center">Description</th>
+                    <th class="text-center">Address</th>
+                    <th class="text-center">City</th>
+                    <th class="text-center">Available Rooms</th>
+                    <th class="text-center">Categories</th>
+                    <th class="text-center">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>         
+    </div>
+</div>
+
+{% endblock %}
+
+
+
+{% block scriptblock %}
+<script src="{% static 'js/intialize_datatable.js' %}"></script>
+<script src="{% static 'js/sweetalert2011.min.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://cdn.datatables.net/2.0.1/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.0/js/dataTables.buttons.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.0/js/buttons.dataTables.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.0/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.0/js/buttons.print.min.js"></script>
+<script>
+
+    var table_id = '#mytable';
+    var to_center = "_all";
+    var url = '{% url "hotel-list-ajax" %}';
+    
+    var filter_id = $('#filter_customer{% if request.user.is_superuser or requser.user.role == "Super Admin" %}, #filter_company{% endif %}');
+    var columns = [
+        // data: json key from prepare_results, name: model field name
+        { data: 'id', name: 'id'},
+        { data: 'image', name: 'image' ,orderable: false },
+        { data: 'manager', name: 'manager'},
+        { data: 'name', name: 'name' },
+        { data: 'owner_name', name: 'owner_name' },
+        { data: 'services', name: 'services',
+          render: function(data,type,row) {
+            if(type ==='display' && data.length > 10){
+                return data.substring(0,30)+'...';
+            }else{
+                return data
+            }
+          }
+        },
+        { data: 'description', name: 'description',
+            render: function(data,type,row) {
+            if(type ==='display' && data.length > 10){
+                return data.substring(0,30)+'...';
+            }else{
+                return data
+            }
+          }
+        },
+        { data: 'address', name: 'address',
+        render: function(data,type,row) {
+            if(type ==='display' && data.length > 10){
+                return data.substring(0,30)+'...';
+            }else{
+                return data
+            }
+          } 
+        },
+        { data: 'city', name: 'city' },
+        { data: 'available_room', name: 'available_room' },
+        { data: 'categories',  name: 'categories', orderable: false },
+        { data: 'action', name: 'action' , orderable: false},
+    ]
+
+    function set_filters() {
+        var data = {}
+        return data;
+    }
+
+    initailize_datatables();
+</script>
+<script>
+$(document).on('click', '.btn' , function (){
+    console.log($(this).data("id"))
+});
+</script>
+<script>
+	$(document).on('click', '.btn-delete' , function (){
+		var id = $(this).data("id")
+		// console.log(id)
+		var url = $(this).data("url")
+		// console.log(url)
+		Swal.fire({
+			html: `Are you sure you want to delete <b>${name}</b> ?`,
+			icon: 'question',
+			showCloseButton: true,
+			showCancelButton: true,
+			confirmButtonColor: "#7442DB",
+		}).then((result) => {
+			// console.log('insedeeddevr');
+			if (result.isConfirmed) {
+				// console.log('dddddddddddinsedeeddevr');
+				$.ajax({
+					type: "POST",
+					url: url,
+					data: {
+						"id": id,
+						"csrfmiddlewaretoken": '{{ csrf_token }}'
+					},
+					success: function (data) {
+                        console.log("table reloaded",data);
+                        $("#mytable").DataTable().ajax.reload(null, false);
+                        console.log("table reloaded");
+				    }    
+				});
+			}
+		})
+	})
+
+</script>
+<script>
+    {% if messages %}
+        {% for message in messages %}
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "{{ message }}",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        {% endfor %}
+    {% endif %}
+</script>
+
+
+{% endblock %}

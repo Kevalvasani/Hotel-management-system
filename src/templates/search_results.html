@@ -1,0 +1,68 @@
+{% extends "master.html" %} {% load static %} {% block mainblock %}
+
+<section class="furniture_section layout_padding">
+  <div class="container">
+    <div class="heading_container">
+      <h2>Our Hotels</h2>
+      <p>
+      which don't look even slightly believable. If you are going to use a
+      passage of Lorem Ipsum, you need to be sure there isn't an
+      </p>
+    </div>
+    {% for i in result %}
+    <div class="justify-content-center d-flex"> 
+      <div class="card mb-2 w-75 ">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-3">
+              <div class="img-box">
+                <a href="{% url 'hotel_detail' pk=i.hotel.pk %}">
+                <img style="display: inline-block; width: 150px; height: 150px" src="{{ i.hotel.images.first.image.url }}" alt=""/>
+                </a>
+              </div>
+            </div>
+            <div class="col-9">
+              <div class="row">
+                <div class="col-md-6">
+                  <h5>{{ i.hotel.name }} Hotel</h5>
+                  <i class="fa fa-map-marker"> {{ i.hotel.address }}, {{ i.hotel.city }}</i>
+                </div>
+                <div class="col-md-6 text-right">
+                  <h6 class="price_heading">
+                  <b>{% if i.hotel.ratting == 5 %} Excellent {{ i.hotel.ratting }} <i class="fa fa-star text-danger"></i>{% elif i.hotel.ratting == 4 %} Very Good {{ i.hotel.ratting }} <i class="fa fa-star text-danger"></i>{% elif i.hotel.ratting == 3 %} Average {{ i.hotel.ratting }} <i class="fa fa-star text-danger"></i>{% elif i.hotel.ratting == 2 %} Good {{ i.hotel.ratting }} <i class="fa fa-star text-danger"></i>{% elif i.hotel.ratting == 1 %} Normal {{ i.hotel.ratting }} <i class="fa fa-star text-danger"></i>{% else %}N/A{% endif %}</b><br>
+                  <span>({{ i.rattings }})</span>Ratting<br>
+                  </h6><br/>
+                  <b><span>₹ </span> {{ i.average_price|floatformat:0 }} /Day</b><br>
+                  <span>{{days}} days</span> /{{rooms}} rooms<br>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+      <h4> Hotel Are Not At Location</h4>
+    {% endfor %}
+  </div> 
+</section>
+{% endblock %}
+
+{% block scriptblock %}
+
+<script src="{% static 'js/sweetalert2011.min.js' %}"></script>
+
+<script>
+    {% if messages %}
+        {% for message in messages %}
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "{{ message }}",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        {% endfor %}
+    {% endif %}
+</script>
+{% endblock %}

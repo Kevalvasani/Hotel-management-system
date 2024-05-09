@@ -1,0 +1,134 @@
+{% extends 'admin/master.html' %}
+{% load static %}
+
+{% block headblock %}
+   
+{% endblock %}
+
+{% block mainblock %}
+
+<!-- Datatables Header -->
+<div class="content-header">
+    <div class="header-section">
+        <h1>
+            Room Category List<br><small>You can add, edit and delete your data</small>
+        </h1>
+    </div>
+</div>
+<ul class="breadcrumb breadcrumb-top">
+    <li>Room Category</li>
+    <li><b>List</b></li>
+</ul>
+<!-- END Datatables Header -->
+
+<!-- Datatables Content -->
+<div class="block full">
+    <div class="row block-title">
+        <div class = "col-md-6">
+            <h2><strong>Room Category</strong> List</h2>
+        </div>
+        
+    </div>
+    <div class="table-responsive">
+        <table id="mytable" class="table border-top-0 table-striped  table-bordered text-nowrap border-bottom" style="width:100%">
+            <thead>
+                <tr>
+                    <th class="text-center">ID</th>
+                    <th class="text-center">Catogory Name</th>
+                    <th class="text-center">Rooms</th>
+                    <th class="text-center">Person</th>
+                    <th class="text-center">Price</th>
+                    <th class="text-center">Action</th>                     
+                </tr>
+            </thead>
+        <tbody></tbody>
+        </table>   
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scriptblock %}
+
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="{% static 'js/sweetalert2011.min.js' %}"></script>
+<script src="https://cdn.datatables.net/2.0.1/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.0/js/dataTables.buttons.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.0/js/buttons.dataTables.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.0/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.0/js/buttons.print.min.js"></script>
+<script src="{% static 'js/intialize_datatable.js' %}"></script>
+<script>
+    var table_id = '#mytable';
+    var to_center = "_all";
+    var pk = {{ room_categories.0.hotel.id }};
+
+    var url = '/roomcategory-list-ajax/'+ pk;
+    
+    var columns = [
+        { data: 'id', name: 'id'},
+        { data: 'catogory_name', name: 'catogory_name'},
+        { data: 'rooms', name: 'rooms'},
+        { data: 'person', name: 'person'},
+        { data: 'price', name: 'price'},
+        { data: 'action', name: 'action',orderable: false},
+    ]
+
+    function set_filters() {
+        var data = {}
+
+        return data;
+    }
+
+    initailize_datatables()
+</script>
+<script>
+	$(document).on('click', '.btn-delete' , function (){
+		var id = $(this).data("id")
+		var url = $(this).data("url")
+
+		Swal.fire({
+			html: `Are you sure you want to delete <b>${name}</b> ?`,
+			icon: 'question',
+			showCloseButton: true,
+			showCancelButton: true,
+			confirmButtonColor: "#7442DB",
+		}).then((result) => {
+
+			if (result.isConfirmed) {
+
+				$.ajax({
+					type: "POST",
+					url: url,
+					data: {
+						"pk": id,
+						"csrfmiddlewaretoken": '{{ csrf_token }}'
+					},
+					success: function (data) {
+
+                        $("#mytable").DataTable().ajax.reload(null, false);
+                      
+				    }    
+				});
+			}
+		})
+	})
+
+</script>
+<script>
+    {% if messages %}
+        {% for message in messages %}
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "{{ message }}",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        {% endfor %}
+    {% endif %}
+</script>
+{% endblock %}

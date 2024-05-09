@@ -1,0 +1,106 @@
+{% extends 'admin/master.html' %}
+{% load static %}
+
+
+
+{% block mainblock %}
+
+<!-- Datatables Header -->
+<div class="content-header">
+    <div class="header-section">
+        <h1>
+            <i class="fa fa-table"></i>Update Hotel<br><small>You can add, Update and delete your data</small>
+        </h1>
+    </div>
+</div>
+<ul class="breadcrumb breadcrumb-top">
+    <li>Hotel</li>
+    <li><a href="#">Update</a></li>
+</ul>
+<!-- END Datatables Header -->
+
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Basic Form Elements Block -->
+            <div class="block">
+                <!-- Basic Form Elements Title -->
+                <div class="block-title">
+                    <h2><strong>Update <i>{{ hotel.name}}</i></strong> Hotel</h2>
+                </div>
+                <!-- END Form Elements Title -->
+
+                <!-- Basic Form Elements Content -->
+                <form action="" method="post" enctype="multipart/form-data" class="form-horizontal form-bordered">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            <label class="col-md-6 col-form-label">{{form.name.label}} : </label>
+                            {{form.name}}
+                        </div>
+                        
+                        <div class="col-md-4">
+                        <label class="col-md-6 col-form-label">{{form.owner_name.label}} : </label>
+                            {{form.owner_name}}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="col-md-4 col-form-label">{{ image_form.image.label }} : </label>
+                            {{ image_form.image }}
+                        </div>                   
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            <label class="col-md-6 col-form-label">{{form.description.label}} : </label>
+                            {{form.description}}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="col-md-6 col-form-label">{{form.services.label}} : </label>
+                            {{form.services}}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="col-md-6 col-form-label">{{form.address.label}} : </label>
+                            {{form.address}}
+                        </div>
+                    </div>
+                     <div class="form-group">
+                     
+                        <div class="col-md-4">
+                            <label class="col-md-6 col-form-label">{{form.city.label}} : </label>
+                            {{form.city}}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="col-md-6 col-form-label">{{form.room.label}} : </label>
+                            {{form.room}}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-angle-right"></i>Submit</button>
+                        </div>
+                    </div>
+                </form> 
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block scriptblock %}
+
+<script src="{% static 'js/sweetalert2011.min.js' %}"></script>
+
+<script>
+    {% if messages %}
+        {% for message in messages %}
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "{{ message }}",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        {% endfor %}
+    {% endif %}
+</script>
+   
+{% endblock %}

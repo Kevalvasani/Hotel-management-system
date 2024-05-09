@@ -1,0 +1,140 @@
+
+{% load static %} 
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Hotel Booking App - Registration</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+    {% comment %} <link rel="stylesheet" href="your_custom_styles.css"> <!-- Add your custom styles if needed --> {% endcomment %}
+    <style>
+        body {
+            background-color: #e0e4e9;
+            /* Teal background color */
+            color: #ffffff; /* White text color */
+        }
+
+        .card {
+
+            color: #ffffff; 
+            transition: transform 0.3s ease-in-out;
+        }
+
+       
+        .card-header {
+                    
+        }
+
+        .btn-success {
+            background: linear-gradient(145deg, #004d40, #00251a); /* Simulated 3D gradient background for the button */
+            border-color: #004d40; /* Dark teal border color for the button */
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(145deg, #00251a, #00120d); /* Darker teal background on hover for the button */
+            border-color: #00251a; /* Darker teal border color on hover for the button */
+        }
+
+        .required-message {
+            color: #dc3545; /* Bootstrap's danger color for a red required message */
+            font-size: 0.875rem; /* Adjust font size as needed */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <h1 class="text-center text-dark mb-4">Hotel Booking App</h1>
+                <div class="card shadow-lg">
+                    <div class="card-header text-dark text-center fw-bold fs-4">
+                        Customer Registration
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" class="row g-3">
+                            {% csrf_token %}
+                            <!-- Form fields with required messages -->
+                            <div class="col-md-6 mb-2">
+                                <label for="first_name" class="form-label text-dark">{{form.first_name.label}} {% if form.first_name.field.required %}*{% endif %}</label>
+                                {{ form.first_name }}
+                                <span class="required-message">{{ form.first_name.errors.required }}</span>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label for="last_name" class="form-label text-dark">{{form.last_name.label}} {% if form.last_name.field.required %}*{% endif %}</label>
+                                {{ form.last_name }}
+                                <span class="required-message">{{ form.last_name.errors.required }}</span>
+                            </div>              
+                            <div class="col-md-6 mb-2">
+                                <label for="email" class="form-label text-dark">{{form.email.label}} <span style="color:red;">*</span></label>
+                                {{ form.email }}
+
+                                {% if form.email.errors %}
+                                {% for error in form.email.errors %}
+                                    <p style="color: red;">{{error}}</p>
+                                {% endfor %}
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label for="password" class="form-label text-dark">{{form.password.label}} {% if form.password.field.required %}<span style="color:red;">*</span>{% endif %}</label>
+                                {{ form.password }} 
+                                 {% if form.password.errors %}
+                                {% for error in form.password.errors %}
+                                    <p style="color: red;">{{error}}</p>
+                                {% endfor %}
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label for="password" class="form-label text-dark">{{form.password_confirm.label}} {% if form.password_confirm.field.required %}<span style="color:red;">*</span>{% endif %}</label>
+                                {{ form.password_confirm }} 
+                                 {% if form.password_confirm.errors %}
+                                {% for error in form.password_confirm.errors %}
+                                    <p style="color: red;">{{error}}</p>
+                                {% endfor %}
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6 mb-2">
+                                <label for="phone_number" class="form-label text-dark ">{{form.phone_number.label}} {% if form.phone_number.field.required %}<span style="color:red;">*</span>{% endif %}</label>
+                                {{ form.phone_number }}
+                                 {% if form.phone_number.errors %}
+                                    {% for error in form.phone_number.errors %}
+                                        <p style="color: red;">{{error}}</p>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                            <div class="col-12 text-center mt-3">
+                                <button type="submit" class="btn btn-primary w-25 p-1 fw-bold fs-2">Register</button>
+                            </div>
+                            <div class="text-center text-dark mt-3">
+                                All ready have an account?<a href="{% url 'login' %}" class="text-dark">Login here</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+
+<script src="{% static 'js/sweetalert2011.min.js' %}"></script>
+<script>
+    {% if messages %}
+        {% for message in messages %}
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "{{ message }}",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        {% endfor %}
+    {% endif %}
+</script></body>
+
+</html>

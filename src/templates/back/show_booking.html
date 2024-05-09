@@ -1,0 +1,143 @@
+{% extends 'admin/master.html' %}
+{% load static %}
+
+{% block mainblock %}
+
+<!-- Datatables Header -->
+<div class="content-header">
+    <div class="header-section">
+        <h1>
+            Booking List<br><small>You can add, edit and delete your data</small>
+        </h1>
+    </div>
+</div>
+<ul class="breadcrumb breadcrumb-top">
+    <li>Booking</li>
+    <li><b>List</b></li>
+</ul>
+<!-- END Datatables Header -->
+
+<!-- Datatables Content -->
+<div class="block full">
+    <div class="row block-title">
+        <h2><strong>Booking</strong> List</h2>
+    </div>
+    <div class="table-responsive">
+        <table id="mytable" class="table border-top-0 table-striped  table-bordered text-nowrap border-bottom" style="width:100%">
+            <input type="date" id="fromdate">
+            <input type="date" id="todate">
+            <thead>
+                <tr>
+                    <th class="text-center">ID</th>
+                    <th class="text-center">Hotel</th>
+                    <th class="text-center">User</th>
+                    <th class="text-center">Email</th>
+                    <th class="text-center">Phone</th>
+                    <th class="text-center">Room Category</th>
+                    <th class="text-center">Rooms</th>
+                    <th class="text-center">Person</th>
+                    <th class="text-center">Guests</th>
+                    <th class="text-center">Checkin</th>
+                    <th class="text-center">Checkout</th>
+                    <th class="text-center">Booking date</th>
+                    <th class="text-center">Amount</th>
+                    <th class="text-center">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                
+            </tbody>
+        </table>    
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Understood</button>
+                </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scriptblock %}
+<script src="{% static 'js/intialize_datatable.js' %}"></script>
+
+<script src="{% static 'js/sweetalert2011.min.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://cdn.datatables.net/2.0.1/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.0/js/dataTables.buttons.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.0/js/buttons.dataTables.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.0/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.0/js/buttons.print.min.js"></script>
+<script>
+    var table_id = '#mytable';
+    var to_center = "_all";
+
+    var url = '{% url "booking-detail-list-ajax" %}';
+    
+    var filter_id = $('#fromdate,#todate');
+    var columns = [
+        // data: json key from prepare_results, name: model field name
+        { data: 'id', name: 'id'},
+        { data: 'hotel', name: 'hotel' },
+        { data: 'user', name: 'user'},
+        { data: 'email', name: 'email' },
+        { data: 'phone', name: 'phone' },
+        { data: 'room_category', name: 'room_category' },
+        { data: 'room', name: 'room' },
+        { data: 'person', name: 'person' },
+        { data: 'guests', name: 'guests',
+        render: function(data, type, row) {
+            return data.map(function(guest) { 
+                return guest.name ;
+            }).join('<br>');
+        },
+            orderable: false},
+        { data: 'checkin_date', name: 'checkin_date' },
+        { data: 'checkout_date', name: 'checkout_date' },
+        { data: 'booking_date', name: 'booking_date' },
+        { data: 'amount', name: 'amount' },
+        { data: 'status', name: 'status' },
+    ]
+
+    function set_filters() {
+        var data = {}
+        data['fromdate']= $("#fromdate").val();
+        data['todate']= $("#todate").val();
+        console.log(data);
+        return data;
+    }
+
+    initailize_datatables()
+</script>
+
+<script>
+    {% if messages %}
+        {% for message in messages %}
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "{{ message }}",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        {% endfor %}
+    {% endif %}
+</script>
+{% endblock %}

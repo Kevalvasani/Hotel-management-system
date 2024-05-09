@@ -1,0 +1,132 @@
+{% extends 'admin/master.html' %}
+{% load static %}
+
+{% block headblock %}
+   
+{% endblock %}
+
+{% block mainblock %}
+
+<!-- Datatables Header -->
+<div class="content-header">
+    <div class="header-section">
+        <h1>
+            Customers List<br><small>You can add, edit and delete your data</small>
+        </h1>
+    </div>
+</div>
+<ul class="breadcrumb breadcrumb-top">
+    <li>Customers</li>
+    <li><b>List</b></li>
+</ul>
+<!-- END Datatables Header -->
+
+<!-- Datatables Content -->
+<div class="block full">
+    <div class="block-title">
+        <h2><strong>Customers</strong> List</h2>
+    </div>
+    <div class="table-responsive">
+        <table id="mytable" class="table border-top-0 table-striped  table-bordered text-nowrap border-bottom" style="width:100%">
+            <thead>
+                <tr>
+                    <th class="text-center">ID</th>
+                    <th class="text-center">First name</th>
+                    <th class="text-center">Username</th>
+                    <th class="text-center">Email</th>
+                    <th class="text-center">Phone</th>
+                    <th class="text-center">Action</th>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>         
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scriptblock %}
+<script src="{% static 'js/intialize_datatable.js' %}"></script>
+<script src="{% static 'js/sweetalert2011.min.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://cdn.datatables.net/2.0.1/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.0/js/dataTables.buttons.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.0/js/buttons.dataTables.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.0/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.0/js/buttons.print.min.js"></script>
+<script>
+
+    var table_id = '#mytable';
+    var to_center = "_all";
+    var url = '{% url "customer-list-ajax" %}';
+    var filter_id = $('#mytable');
+    
+	var columns = [
+        { data: 'id', name: 'id'},
+        { data: 'first_name', name: 'first_name' },
+        { data: 'username', name: 'username' },
+        { data: 'email', name: 'email' },
+        { data: 'phone_number', name: 'phone_number' },
+		{ data: 'action', name: 'action', orderable: false},
+    ]
+
+    function set_filters() {
+        var data = {}
+        return data;
+    }
+
+
+    initailize_datatables();
+
+</script>
+<script>
+		
+	$(document).on('click', '.btn-delete' , function (e){
+		var id = $(this).data("id")
+		console.log(id)
+		var url = $(this).data("url")
+		console.log(url)
+		Swal.fire({
+			html: `Are you sure you want to delete <b>${name}</b> ?`,
+			icon: 'question',
+			showCloseButton: true,
+			showCancelButton: true,
+			confirmButtonColor: "#7442DB",
+		}).then((result) => {
+			if (result.isConfirmed) {
+				$.ajax({
+					type: "POST",
+					url: url,
+					data: {
+						"id": id,
+						"csrfmiddlewaretoken": '{{ csrf_token }}'
+					},
+					success: function (data) {
+					$("#mytable").DataTable().ajax.reload(null, false);
+				}    
+				});
+			}
+		})
+	})
+
+</script>
+
+<script>
+    {% if messages %}
+        {% for message in messages %}
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "{{ message }}",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        {% endfor %}
+    {% endif %}
+</script>
+
+{% endblock %}

@@ -1,0 +1,40 @@
+
+body {
+  background-color: #e0e4e9;
+
+}
+
+.card {
+
+   /* Simulated 3D gradient background */
+   /* Dark teal border for the card */
+   /* White text color in the card */
+  /* Box shadow for a subtle lift */
+  transition: transform 0.3s ease-in-out;
+}
+
+
+
+
+.btn-success {
+  background: linear-gradient(
+    145deg,
+    #004d40,
+    #00251a
+  ); /* Simulated 3D gradient background for the button */
+  border-color: #004d40; /* Dark teal border color for the button */
+}
+
+.btn-success:hover {
+  background: linear-gradient(
+    145deg,
+    #00251a,
+    #00120d
+  );
+  
+}
+
+.required-message {
+  color: #dc3545; /* Bootstrap's danger color for a red required message */
+  font-size: 0.875rem; /* Adjust font size as needed */
+}

@@ -1,0 +1,106 @@
+{% extends 'admin/master.html' %}
+{% load static %}
+
+{% block headblock %}
+   
+{% endblock %}
+
+{% block mainblock %}
+<div class="content-header">
+    <div class="header-section">
+        <div class="row">
+            <div class="col-sm-6 ">
+                <h1>
+                    Contact Message List<br><small>You can Add, Update and Delete your Data</small>
+                </h1>
+            </div>
+        </div>
+    </div>
+</div>
+<ul class="breadcrumb breadcrumb-top">
+    <li>Contact Message</li>
+    <li><b>List</b></li>
+</ul>
+<!-- END Datatables Header -->
+
+<!-- Datatables Content -->
+<div class="block full">
+    <div class="block-title">
+        <h2><strong>Contact</strong> Message</h2>
+    </div>
+    <div class="table-responsive">
+        <table id="mytable" class="table border-top-0 table-striped  table-bordered text-nowrap border-bottom" style="width:100%">
+            <thead>
+                <tr>
+                    <th class="text-center">ID</th>
+                    <th class="text-center">Name</th>
+                    <th class="text-center">Phone number</th>
+                    <th class="text-center">Email</th>
+                    <th class="text-center">Message</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>         
+    </div>
+</div>
+{% endblock %}
+{% block scriptblock %}
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://cdn.datatables.net/2.0.1/js/dataTables.js"></script>
+<script src="https: js/dataTables.buttons.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.0/js/buttons.dataTables.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.0/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.0/js/buttons.print.min.js"></script>
+<script src="{% static 'js/intialize_datatable.js' %}"></script>
+<script src="{% static 'js/sweetalert2011.min.js' %}"></script>
+<script>
+
+    var table_id = '#mytable';
+    var to_center = "_all";
+    var url = '{% url "contact-list-ajax" %}';
+    var columns = [
+        { data: 'id', name: 'id'},
+        { data: 'name', name: 'name'},
+        { data: 'phone_number', name: 'phone_number'},
+        { data: 'email', name: 'email'},
+        { data: 'message', name: 'message',
+        render: function(data,type,row) {
+            if(type ==='display' && data.length > 10){
+                return data.substring(0,40) + '...';
+            }else{
+                return data
+            }
+        }},
+        { data: 'action', name: 'action'},
+    ]
+
+    function set_filters() {
+        var data = {}
+        return data;
+    }
+
+    initailize_datatables();
+</script>
+<script>
+$(document).on('click', '.btn' , function (){
+    console.log($(this).data("id"))
+});
+</script>
+<script>
+    {% if messages %}
+        {% for message in messages %}
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "{{ message }}",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        {% endfor %}
+    {% endif %}
+</script>
+{% endblock %}

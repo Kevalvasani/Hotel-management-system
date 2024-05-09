@@ -1,0 +1,148 @@
+{% extends "master.html" %} 
+{% load static %}
+
+{% block headblock %}
+  <link href="{% static 'css/ssstyle.css' %}" rel="stylesheet" />
+{% endblock %}
+
+{% block mainblock %}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="row mt-5">
+            <div class="col-md-9">
+                <div class="card shadow-lg">
+                    <div class="row">
+                        <div class="col-10 ms-3">
+                            <h5>Your Booking for Hotel <b>{{hotel.hotel}}</b></h5>
+                            <h6>{{hotel.hotel.address}}</h6>
+                        </div>
+                        <div class="col-1">
+                            <img src="{{ hotel.hotel.images.first.image.url }}" style="display: inline-block; width: 100px; height: 100px" alt="IMG" />
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="row display-flex">
+                            <div class="col-2">
+                                <h5>{{hotel.catogory_name}}</h5> 
+                            </div>
+                            <div class="col-6">
+                                <h6>{{hotel.price}}/day</h6>
+                            </div>
+                        </div>
+                        {{ hotel.person }} person are allowed<br>
+                        <i class="fa fa-close" style="font-size:15px; color:red"></i><span style="color:red">Non-Refundable </span>| On Cancellation, You will not get any refund
+                    </div><br><br>   
+                    <div class="col-12">
+                        <h4 style="color:red">Important News</h4>
+                        <ul>
+                            <li style="list-style:disc">Stags entries are not allowed.</li>
+                            <li style="list-style:disc">Guests below 18 years of age are not allowed at the property.</li>
+                            <li style="list-style:disc">Passport, Aadhar, Driving License and Govt. ID are accepted as ID proof(s).</li>
+                            <li style="list-style:disc">Pets are not allowed.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="ms-3">Any Of Yours Details</h3>
+                        <form action="{% url 'booking' pk=hotel.pk %}" method="post" enctype="multipart/form-data" id="booking" class="form-horizontal form-bordered">
+                            {% csrf_token %}
+                            <div class="raw form-group">
+                                <div class="col-md-6">
+                                    {{ guest_form.management_form }}
+                                    {% for form in guest_form.forms %}
+                                        <label class="col-md-6 col-form-label fs-6">{{form.name.label}} : </label>
+                                        {{ form.name }}
+                                        {% if error %}
+                                            <div class="alert alert-danger" role="alert">
+                                                {{error}}
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-6">
+                                    <label class="col-md-6 col-form-label fs-6">{{form.email.label}} : </label>
+                                    {{form.email}}
+                                    {% if form.phoemailne.errors %}
+                                    {% for error in form.phemailone.errors %}
+                                        <p style="color: red;">{{error}}</p>
+                                    {% endfor %}
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="col-md-6 col-form-label fs-6">{{form.phone.label}} : </label>
+                                    {{form.phone}}
+                                     {% if form.phone.errors %}
+                                    {% for error in form.phone.errors %}
+                                        <p style="color: red;">{{error}}</p>
+                                    {% endfor %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% comment %} <div id="guest-form-container">
+                                
+                            </div> {% endcomment %}
+                            {% comment %} <button type="button" id="add-guest-btn" class="btn btn-sm btn-secondary">Add Guest</button> {% endcomment %}
+                            <div class="form-group">
+                                <div class="col-md-6">
+                                    <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-angle-right"></i>Submit</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card shadow-lg .mt-n1">
+                    <h5><b>Price Breakup</b></h5><br>
+                    <div class="row">
+                        <div class="col-7">
+                            {{total_rooms}} Room x {{ total_days }} Night 
+                        </div>
+                        <div class="col-5" style="justify-content:end; display:flex;">
+                            ₹ {{total_price}}
+                        </div>
+                    </div><hr>    
+                    <div class="row">
+                        <div class="col-7">
+                           Total discount: 
+                        </div>
+                        <div class="col-5" style="justify-content:end; display:flex;">
+                            ₹ {{discount}}
+                        </div>
+                    </div> <hr>
+                    <div class="row">
+                        <div class="col-7">
+                           Total Amount:  
+                        </div>
+                        <div class="col-5" style="justify-content:end; display:flex;">
+                            ₹ {{after_discount}}
+                        </div>
+                    </div> <hr>
+                </div>
+            </div>
+        </div>  
+    </div>
+</div>
+{% endblock %}
+
+{% block scriptblock %}
+
+<script src="{% static 'js/sweetalert2011.min.js' %}"></script>
+
+<script>
+    {% if messages %}
+        {% for message in messages %}
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "{{ message }}",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        {% endfor %}
+    {% endif %}
+</script>
+   
+{% endblock %}

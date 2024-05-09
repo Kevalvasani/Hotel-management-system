@@ -1,0 +1,117 @@
+{% extends "master.html" %} {% load static %} {% block mainblock %}
+<br><br><br>
+<section>
+  <div class="container">
+    <div style = "background-color:white" class="shadow-lg justify-content-center">
+      <div class="p-b-70">
+      <br>  
+        <h3 class="ms-3">{{ hotel.name }} Hotel</h3>
+        <div class="flex-wr-s-s p-b-40">
+          <span class="f1-s-3 cl8 ms-3 m-r-15">  
+          <a href="#" class="f1-s-4 cl8 hov-cl10 trans-03">
+          by {{ hotel.owner_name }}
+          </a>
+          <span class="m-rl-3">-</span>
+          <span> {{ hotel.created_at|date:"M Y" }} </span>
+          </span>
+        </div>    
+        <div class="row">
+          <div class="col-5 px-3 ms-3">
+          <img src="{{ hotel.images.first.image.url }}" style="display: inline-block; width: 400px; height: 370px" alt="IMG" />
+          <br /><br />                                    
+            <div class="average-rating">
+            Average Rating: {% if hotel.ratting %}{{ hotel.ratting }}/5<i class="fa fa-star text-danger"></i>{% else %}N/A{% endif %} ({{rattings}}) Rattings
+            </div>
+          </div>
+          <div class="col-6 px-5">
+            <p class="display-flex ">{{ hotel.description }}</p>
+          </div>
+          <section class="mt-5">
+            <div class="container">
+              <div class="how2 how2-cl4 flex-s-c">
+                <h3 class="f1-m-2 cl3 tab01-title">Service</h3>
+              </div><br /><br />
+              <div class="row">
+                {% for service in hotel.get_services_list %}
+                {% if forloop.counter|divisibleby:2 %}
+                <div class="col-6">
+                    <ul>
+                        <li style="list-style: disc">{{ service }}</li>
+                    </ul>
+                </div>
+                {% else %}
+                <div class="col-6">
+                    <ul>
+                        <li style="list-style: disc">{{ service }}</li>
+                    </ul>
+                </div>
+                {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+          </section>
+          <section class="mt-5">
+            <div class="container">
+                <div class="how2 how2-cl4 flex-s-c">
+                    <h3 class="f1-m-2 cl3 tab01-title">Available Rooms</h3>
+                </div>
+                <br><br>
+                <div class="row">
+                    {% for available_room in available_rooms %}
+
+                    <div class="col-md-6 col-lg-4 mx-auto">
+                        <div class="box" style="border-radius:8px">
+                            <div class="img-box" style="transition: transform 0.5s ease-in-out;">
+                                <img style="display: inline-block; width: 369px; height: 250px;" src="{{ available_room.category.room_category.first.image.url }}" alt=""/>
+                            </div>
+                            <div class="detail-box">
+                                <div class="row">
+                                    <div class="col-8">
+                                        <h5>{{ available_room.category.catogory_name }}</h5>
+                                    </div>
+                                    <div class="col-4 h-100 d-flex align-items-end justify-content-end">
+                                        <p>{{ available_room.available_rooms }} Rooms Available</p>
+                                    </div>
+                                </div>
+                                <!-- Add other details as needed -->
+                                <!-- ... -->
+                                {% if available_room.available_rooms >= available_room.rooms %} 
+                                <div class="h-100 d-flex align-items-center justify-content-center">
+                                    <a class="btn btn-primary" href="{% url 'booking' pk=available_room.category.pk %}"> Book Now </a>
+                                </div>
+                                {% else %}
+                                  <span class="" style="color:red">Bookings for {{person}} people or {{available_room.rooms}} rooms are not possible, but this many rooms are not offered in this category.</span>
+                                {% endif %}
+                            </div>
+                        </div><br>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block scriptblock %}
+
+<script src="{% static 'js/sweetalert2011.min.js' %}"></script>
+
+<script>
+    {% if messages %}
+        {% for message in messages %}
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "{{ message }}",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        {% endfor %}
+    {% endif %}
+</script>
+{% endblock %}
